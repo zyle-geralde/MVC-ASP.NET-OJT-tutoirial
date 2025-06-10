@@ -27,7 +27,7 @@ namespace WebApplicationSession5.Controllers
             if (personObjectAge < 0)
             {
                 //For passing errors to front end
-                ViewBag.ErrorMessage = "Age should not be zero";
+                ViewBag.ErrorMessage = "Age should not be less than zero";
                 return View();
             }
 
@@ -43,5 +43,53 @@ namespace WebApplicationSession5.Controllers
             PersonModel person = list.Where(person => person.Id == id).FirstOrDefault();
             return View(person);
         }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            PersonModel person = list.Where(person => person.Id == id).FirstOrDefault();
+            return View(person);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(PersonModel person)
+        {
+
+            PersonModel find_person = list.Where(personn => personn.Id == person.Id).FirstOrDefault();
+
+            if (person.Age < 0)
+            {
+                //For passing errors to front end
+                ViewBag.ErrorMessage = "Age should not be less than zero";
+                return View();
+            }
+
+            find_person.Name = person.Name;
+            find_person.Age = person.Age;
+            find_person.Address = person.Address;
+
+            return RedirectToAction("Index"); //redirection to same controller but diffent action method
+        }
+
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            PersonModel person = list.Where(person => person.Id == id).FirstOrDefault();
+            return View(person);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(PersonModel person)
+        {
+            PersonModel find_person = list.Where(personn => personn.Id == person.Id).FirstOrDefault();
+            if (find_person != null)
+            {
+                list.Remove(find_person);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
